@@ -1,0 +1,57 @@
+version: '3'
+
+
+services:
+  db_kozuchi:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_DB: kozuchi
+      POSTGRES_PASSWORD: kozuchi
+      POSTGRES_USER: kozuchi
+
+    volumes:
+      - volume_kozuchi_db:/var/lib/postgresql/data
+
+    networks:
+      - net_kozuchi
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 60s
+      retries: 5
+      start_period: 5s
+
+  rails_kozuchi:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    environment:
+      # docker-compose run --rm rails_kozuchi rails secretの結果のランダム文字列を以下SECRET_KEY_BASE：の後の部分に貼り付けて置換してください
+      SECRET_KEY_BASE: IPk9EujQwmZOsMNxbCfSGo7RCwEdGAudJX2LvGmiZbjxlxLVR65qGtHeez6mJPZm
+
+      KOZUCHI_DATABASE_PASSWORD: kozuchi
+      RAILS_ENV: production
+      RAILS_SERVE_STATIC_FILES: "true"
+      #SUPPORT_EMAIL_ADDRESS: mail@example.com
+      #ROOT_URL: http://localhost:3000
+
+    ports:
+      - 3000:3000
+
+    depends_on:
+      db_kozuchi:
+        condition: service_healthy
+
+    networks:
+      - net_kozuchi
+      
+volumes:
+  volume_kozuchi_db:
+    name: volume_kozuchi_db
+
+networks:
+  net_kozuchi:
+

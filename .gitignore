@@ -14,9 +14,9 @@ nbproject
 .ruby-gemset
 .rbenv-gemsets
 
-/public/packs
-/public/packs-test
 /node_modules
+/app/assets/builds/*
+!/app/assets/builds/.gitkeep
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity

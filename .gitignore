@@ -2,6 +2,7 @@ tmp
 log
 .*~log
 .*/
+!.github/
 public/assets/*
 doc/app/*
 config/mongrel_cluster.yml

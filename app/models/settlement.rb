@@ -47,8 +47,8 @@ class Settlement < ApplicationRecord
     xml = options[:builder] ||= Builder::XmlMarkup.new(:indent => options[:indent])
     xml.instruct! unless options[:skip_instruct]
     xml.settlement(:id => "settlement#{self.id}", :account => "account#{self.account_id}") do
-      xml.name XMLUtil.escape(name)
-      xml.description XMLUtil.escape(description)
+      xml.name XmlUtil.escape(name)
+      xml.description XmlUtil.escape(description)
     end
   end
 

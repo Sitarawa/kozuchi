@@ -3,7 +3,7 @@
 
 (function( $ ){
 
-  jQuery.fn.observe_field = function(frequency, callback) {
+  $.fn.observe_field = function(frequency, callback) {
 
     frequency = frequency * 1000; // translate to milliseconds
 
@@ -44,4 +44,4 @@
 
   };
 
-})( jQuery );
+})( window.jQuery );

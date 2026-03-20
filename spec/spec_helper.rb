@@ -73,7 +73,11 @@ end
 #   alias_method_chain :session_options, :session_key
 # end
 
-require 'capybara/poltergeist'
-Capybara.javascript_driver = :poltergeist
+require 'capybara/cuprite'
+Capybara.register_driver(:cuprite) do |app|
+  Capybara::Cuprite::Driver.new(app, window_size: [1280, 800], process_timeout: 10, js_errors: true)
+end
+Capybara.javascript_driver = :cuprite
+Capybara.default_max_wait_time = 5
 
 require 'capybara-screenshot/rspec'

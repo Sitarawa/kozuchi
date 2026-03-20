@@ -2,6 +2,7 @@ tmp
 log
 .*~log
 .*/
+!.github/
 public/assets/*
 doc/app/*
 config/mongrel_cluster.yml
@@ -14,9 +15,9 @@ nbproject
 .ruby-gemset
 .rbenv-gemsets
 
-/public/packs
-/public/packs-test
 /node_modules
+/app/assets/builds/*
+!/app/assets/builds/.gitkeep
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity

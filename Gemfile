@@ -15,7 +15,7 @@ gem 'rails-observers'
 gem 'rake'
 gem 'rails_autolink'
 gem 'rb-readline'
-gem 'webpacker'
+gem 'jsbundling-rails'
 
 group :assets do
   gem 'uglifier'
@@ -31,8 +31,7 @@ group :development, :test do
   gem "factory_bot_rails"
   gem 'i18n_generators'
   gem 'listen'
-  gem 'phantomjs', :require => 'phantomjs/poltergeist'
-  gem 'poltergeist'
+  gem 'cuprite'
   gem 'puma'
   gem "pry-rails"
   gem "rspec-rails"

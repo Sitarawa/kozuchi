@@ -204,15 +204,15 @@ module Deal
   # どのようにエラーを補正すればいいかはどのI/Fから使うかによるため明示的に呼ぶ仕様とする
   def modify_errors_for_complex_form
     debtor_entries.each_with_index do |e, i|
-      e.errors.each do |attr, message|
-        errors.add(:base, "借方(#{i+1})：" + e.errors.full_message(attr, message))
-        errors.delete(:"debtor_entries.#{attr}")
+      e.errors.each do |error|
+        errors.add(:base, "借方(#{i+1})：" + e.errors.full_message(error.attribute, error.message))
+        errors.delete(:"debtor_entries.#{error.attribute}")
       end
     end
     creditor_entries.each_with_index do |e, i|
-      e.errors.each do |attr, message|
-        errors.add(:base, "貸方(#{i+1})：" + e.errors.full_message(attr, message))
-        errors.delete(:"creditor_entries.#{attr}")
+      e.errors.each do |error|
+        errors.add(:base, "貸方(#{i+1})：" + e.errors.full_message(error.attribute, error.message))
+        errors.delete(:"creditor_entries.#{error.attribute}")
       end
     end
   end

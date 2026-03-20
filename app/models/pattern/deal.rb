@@ -67,28 +67,29 @@ class Pattern::Deal < ApplicationRecord
       }).except(:id, :user_id, :created_at, :updated_at, :used_at)
   end
 
-  def save(*)
+  def save(**options)
     transaction do
       old_id = new_record? ? nil : id
       prepare_overwrite
-      if (result = super) && old_id && old_id != id
+      result = super(**options)
+      if result && old_id && old_id != id
         old = self.class.find_by(id: old_id)
         old.destroy if old
       end
-      return result
+      result
     end
   end
 
-  def save!(*)
+  def save!(**options)
     transaction do
       old_id = new_record? ? nil : id
       prepare_overwrite
-      result = super
+      result = super(**options)
       if old_id && old_id != id
         old = self.class.find_by(id: old_id)
         old.destroy if old
       end
-      return result
+      result
     end
   end
 

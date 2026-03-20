@@ -121,7 +121,6 @@ GEM
       railties (>= 3.0.0)
     launchy (2.5.0)
       addressable (~> 2.7)
-    libv8 (3.16.14.19)
     listen (3.7.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -137,14 +136,14 @@ GEM
     mini_portile2 (2.8.0)
     minitest (5.16.3)
     multi_json (1.15.0)
-    nio4r (2.5.8)
+    nio4r (2.7.5)
     nokogiri (1.13.9)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     passenger (6.0.15)
       rack
       rake (>= 0.8.1)
-    pg (0.21.0)
+    pg (1.5.9)
     phantomjs (2.1.1.0)
     poltergeist (1.18.1)
       capybara (>= 2.1, < 4)
@@ -203,7 +202,6 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     rb-readline (0.5.5)
-    ref (2.0.0)
     regexp_parser (2.6.0)
     rspec-core (3.12.0)
       rspec-support (~> 3.12.0)
@@ -242,9 +240,6 @@ GEM
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
     temple (0.9.1)
-    therubyracer (0.12.3)
-      libv8 (~> 3.16.14.15)
-      ref
     thor (1.2.1)
     thread_safe (0.3.6)
     tilt (2.0.11)
@@ -279,10 +274,9 @@ DEPENDENCIES
   haml-rails
   httpclient
   i18n_generators
-  libv8
   listen
   passenger
-  pg (~> 0.18)
+  pg (~> 1.5.0)
   phantomjs
   poltergeist
   pry-rails
@@ -296,7 +290,6 @@ DEPENDENCIES
   rspec-rails
   sassc-rails
   sendgrid-ruby
-  therubyracer
   timecop
   uglifier
   webpacker

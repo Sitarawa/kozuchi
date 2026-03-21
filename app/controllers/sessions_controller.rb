@@ -4,7 +4,7 @@ class SessionsController < ApplicationController
   
   # functional test のために残している
   def new
-    render :nothing => true
+    head :ok
   end
 
   def create

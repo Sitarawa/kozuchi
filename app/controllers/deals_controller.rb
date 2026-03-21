@@ -33,7 +33,7 @@ class DealsController < ApplicationController
         pattern =  current_user.deal_patterns.find_by(code: params[:pattern_code])
         # コードが見つからないときはクライアント側で特別に処理するので目印を返す
         unless pattern
-          render :text => 'Code not found'
+          render plain: 'Code not found'
           return
         end
       end
@@ -126,7 +126,7 @@ class DealsController < ApplicationController
     load =  current_user.deal_patterns.find_by(code: params[:pattern_code])
     # コードが見つからないときはクライアント側で特別に処理するので目印を返す
     unless load
-      render :text => 'Code not found'
+      render plain: 'Code not found'
       return
     end
     @deal.load(load)

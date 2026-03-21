@@ -22,7 +22,7 @@ class Settings::DealPatternsController < ApplicationController
     if params[:pattern_code].present?
       load = current_user.deal_patterns.find_by(code: params[:pattern_code])
       unless load
-        render :text => 'Code not found'
+        render plain: 'Code not found'
         return
       end
     elsif params[:pattern_id].present?
@@ -42,7 +42,7 @@ class Settings::DealPatternsController < ApplicationController
     if params[:pattern_code].present?
       load = current_user.deal_patterns.find_by(code: params[:pattern_code])
       unless load
-        render :text => 'Code not found'
+        render plain: 'Code not found'
         return
       end
     elsif params[:pattern_id].present?

@@ -4,7 +4,7 @@ class ExportController < ApplicationController
   after_action :cache_export, :only => [:whole]
 
   def index
-    @export_file_name = "kozuchi-#{Time.zone.today.to_s(:db)}"
+    @export_file_name = "kozuchi-#{Time.zone.today.to_fs(:db)}"
   end
 
   def whole

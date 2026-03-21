@@ -112,7 +112,7 @@ class Deal::General < Deal::Base
       conditions = ""
       for r in results
         conditions += " or " unless conditions.empty?
-        conditions += "(account_entries.summary = '#{r.summary}' and deals.created_at = '#{r.created_at.to_s(:db)}')"
+        conditions += "(account_entries.summary = '#{r.summary}' and deals.created_at = '#{r.created_at.to_fs(:db)}')"
       end
       conditions = "deals.user_id = #{user_id} and (#{conditions})"
 

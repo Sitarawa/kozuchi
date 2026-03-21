@@ -15,7 +15,6 @@ gem 'rails-controller-testing'
 gem 'rails-observers'
 gem 'rake'
 gem 'rails_autolink'
-gem 'rb-readline'
 gem 'jsbundling-rails'
 
 group :assets do

@@ -141,7 +141,7 @@ GEM
       concurrent-ruby (~> 1.1)
       webrick (~> 1.7)
       websocket-driver (~> 0.7)
-    ffi (1.15.5)
+    ffi (1.16.3)
     globalid (1.3.0)
       activesupport (>= 6.1)
     haml (6.0.8)
@@ -352,6 +352,7 @@ DEPENDENCIES
   cuprite
   database_cleaner
   factory_bot_rails
+  ffi (~> 1.16.0)
   haml-rails
   httpclient
   i18n_generators

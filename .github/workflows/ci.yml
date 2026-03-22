@@ -2,9 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [dev_3_1_3]
   pull_request:
-    branches: [dev_3_1_3]
 
 jobs:
   test:

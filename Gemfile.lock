@@ -328,8 +328,6 @@ GEM
     tsort (0.2.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    uglifier (4.2.0)
-      execjs (>= 0.3.0, < 3)
     webrick (1.9.2)
     websocket-driver (0.8.0)
       base64
@@ -370,7 +368,6 @@ DEPENDENCIES
   sassc-rails
   sendgrid-ruby
   timecop
-  uglifier
 
 RUBY VERSION
    ruby 3.1.6p260

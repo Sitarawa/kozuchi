@@ -65,8 +65,8 @@ module ApplicationHelper
   # 国際化にあわせたリファクタリングするまでの臨時措置。一行でエラーを表示する。attrを無視する。
   def error_message(obj)
     message = ""
-    obj.errors.each do |attr, msg|
-      message << msg
+    obj.errors.each do |error|
+      message << error.message
     end
     message
   end
@@ -79,18 +79,47 @@ module ApplicationHelper
     if obj.errors.size > 1
       messages << "<div>エラーがありました。ご確認ください。</div>\n"
       messages << "<ul>\n"
-      obj.errors.each do |attr, msg|
-        messages << "<li>#{msg}</li>"
+      obj.errors.each do |error|
+        messages << "<li>#{error.message}</li>"
       end
       messages << "</ul>"
     else
-      # TODO: とりあえずなので適当な書き方
-      obj.errors.each do |attr, msg|
-        messages << msg
+      obj.errors.each do |error|
+        messages << error.message
       end
     end
     messages << "</div>"
     messages.html_safe
+  end
+
+  # dynamic_form の error_messages_for の代替
+  def error_messages_for(*params)
+    options = params.extract_options!.symbolize_keys
+    objects = Array.wrap(options.delete(:object) || params).map do |object|
+      object = instance_variable_get("@#{object}") unless object.respond_to?(:to_model)
+      object
+    end
+    objects.compact!
+    count = objects.sum { |object| object.errors.count }
+
+    return "".html_safe if count.zero?
+
+    object_name = if options[:object_name]
+      options[:object_name]
+    elsif objects.first.class.respond_to?(:model_name)
+      objects.first.class.model_name.human
+    else
+      params.first.to_s.gsub('_', ' ')
+    end
+    header_tag = options[:header_tag] || :h2
+
+    header_message = I18n.t(:"activerecord.errors.template.header", count: count, model: object_name)
+    body_message = I18n.t(:"activerecord.errors.template.body")
+
+    error_list = objects.flat_map { |object| object.errors.full_messages }.map { |msg| content_tag(:li, msg) }.join.html_safe
+
+    contents = content_tag(header_tag, header_message) + content_tag(:p, body_message) + content_tag(:ul, error_list)
+    content_tag(:div, contents, id: "errorExplanation", class: "errorExplanation")
   end
 
   def html_tag(&block)
@@ -115,7 +144,7 @@ EOF
     <meta http-equiv="content-style-type" content="text/css" />
     #{csrf_meta_tags}
     #{stylesheet_link_tag *stylesheets.insert(0, 'application')}
-    #{javascript_pack_tag :application}
+    #{javascript_include_tag "jquery", "application"}
     #{render :partial => "shared/google_analytics"}
     #{inner_content}
   </head>

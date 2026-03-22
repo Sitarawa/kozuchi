@@ -4,17 +4,17 @@ class ExportController < ApplicationController
   after_action :cache_export, :only => [:whole]
 
   def index
-    @export_file_name = "kozuchi-#{Time.zone.today.to_s(:db)}"
+    @export_file_name = "kozuchi-#{Time.zone.today.to_fs(:db)}"
   end
 
   def whole
-    options = {:layout => false}
+    options = {layout: false}
     options[:content_type] = "application/octet-stream" if params[:download] == "1"
     if fragment_exist? fragment_key
       options[:content_type] ||= "text/xml" if params[:format] == 'xml'
-      render options.merge(:text => read_fragment(fragment_key))
+      render **options.merge(plain: read_fragment(fragment_key))
     else
-      render options
+      render **options
     end
   end
 

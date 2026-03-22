@@ -206,7 +206,7 @@ GEM
     passenger (6.0.15)
       rack
       rake (>= 0.8.1)
-    pg (1.5.9)
+    pg (1.6.3)
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
@@ -355,7 +355,7 @@ DEPENDENCIES
   jsbundling-rails
   listen
   passenger
-  pg (~> 1.5.0)
+  pg
   pry-rails
   puma
   rails (~> 7.1.0)

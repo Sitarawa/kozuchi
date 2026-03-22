@@ -101,70 +101,69 @@
 %p 口座、費目、収入内訳、家計簿記入データ、精算データをXMLまたはCSVで出力します。フレンド、取引連携状態等はエクスポートされません。
 %p XMLのフォーマットは次のようになります。
 %pre{style: "border:1px solid #888888; padding: 4px; margin-left: 20px;"}
-  = preserve do
-    :escaped
-      <kozuchi version="0.16.7" timestamp="2009-05-21T14:27:07" user="yourname">
+  :preserve
+    &lt;kozuchi version="0.16.7" timestamp="2009-05-21T14:27:07" user="yourname"&gt;
 
-        <!-- 口座リスト -->
-        <assets>
-          <!-- typeに口座種別、positionに並び順、idにシステム上の識別子、要素に口座名が入ります -->
-          <asset type="cache" position="1" id="account1">現金</asset>
-          ...
-          ...
-        </assets>
+      &lt;!-- 口座リスト --&gt;
+      &lt;assets&gt;
+        &lt;!-- typeに口座種別、positionに並び順、idにシステム上の識別子、要素に口座名が入ります --&gt;
+        &lt;asset type="cache" position="1" id="account1"&gt;現金&lt;/asset&gt;
+        ...
+        ...
+      &lt;/assets&gt;
 
-        <!-- 費目リスト -->
-        <expenses>
-          <!-- positionに並び順、idにシステム上の識別子、要素に費目名が入ります -->
-          <expense position="1" id="account2">食費</expense>
-          ...
-          ...
-        </expenses>
+      &lt;!-- 費目リスト --&gt;
+      &lt;expenses&gt;
+        &lt;!-- positionに並び順、idにシステム上の識別子、要素に費目名が入ります --&gt;
+        &lt;expense position="1" id="account2"&gt;食費&lt;/expense&gt;
+        ...
+        ...
+      &lt;/expenses&gt;
 
-        <!-- 収入内訳リスト -->
-        <incomes>
-          <!-- positionに並び順、idにシステム上の識別子、要素に収入内訳名が入ります -->
-          <income position="1" id="account2">食費</income>
-          ...
-          ...
-        </incomes>
+      &lt;!-- 収入内訳リスト --&gt;
+      &lt;incomes&gt;
+        &lt;!-- positionに並び順、idにシステム上の識別子、要素に収入内訳名が入ります --&gt;
+        &lt;income position="1" id="account2"&gt;食費&lt;/income&gt;
+        ...
+        ...
+      &lt;/incomes&gt;
 
-        <!-- 記入データリスト -->
-        <deals>
+      &lt;!-- 記入データリスト --&gt;
+      &lt;deals&gt;
 
-          <!-- １件の記入 -->
-          <!-- dateに日付、confirmedに確認状態かどうか、positionに１日の中での記入順、idにシステム上の識別子が入ります -->
-          <deal date="2009-05-15" confirmed=true" position="1" id="deal1" >
-            <!-- 識別子'account1'の勘定（口座または費目または収入内訳）から識別子'account2'の勘定への800円の移動 -->
-            <entries>
-              <entry account="account1" summary="昼食">-800</entry>
-              <entry account="account2" summary="昼食">800</entry>
-              <!-- 精算と紐付いていれば entryのsettlement属性に精算の識別子が入ります -->
-            </entries>
-          </deal>
-          ...
-          ...
-          <!-- 残高記入 （通常の記入と混在）-->
-          <balance account="account23" date="2009-05-21" position="2" id="balance745">
-            <amount>1300</amount>
-          </balance>
-          ...
-          ...
-        </deals>
+        &lt;!-- １件の記入 --&gt;
+        &lt;!-- dateに日付、confirmedに確認状態かどうか、positionに１日の中での記入順、idにシステム上の識別子が入ります --&gt;
+        &lt;deal date="2009-05-15" confirmed="true" position="1" id="deal1"&gt;
+          &lt;!-- 識別子'account1'の勘定（口座または費目または収入内訳）から識別子'account2'の勘定への800円の移動 --&gt;
+          &lt;entries&gt;
+            &lt;entry account="account1" summary="昼食"&gt;-800&lt;/entry&gt;
+            &lt;entry account="account2" summary="昼食"&gt;800&lt;/entry&gt;
+            &lt;!-- 精算と紐付いていれば entryのsettlement属性に精算の識別子が入ります --&gt;
+          &lt;/entries&gt;
+        &lt;/deal&gt;
+        ...
+        ...
+        &lt;!-- 残高記入 （通常の記入と混在）--&gt;
+        &lt;balance account="account23" date="2009-05-21" position="2" id="balance745"&gt;
+          &lt;amount&gt;1300&lt;/amount&gt;
+        &lt;/balance&gt;
+        ...
+        ...
+      &lt;/deals&gt;
 
-        <!-- 精算リスト -->
-        <settlements>
-          <!-- １件の精算 -->
-          <!-- accountに対象勘定識別子、idにこの精算のシステム内識別子 -->
-          <settlement account="account24" id="settlement1">
-            <name>カードXの精算</name>
-            <description>精算データの備考です</description>
-          </settlement>
-          ...
-          ...
-        </settlements>
+      &lt;!-- 精算リスト --&gt;
+      &lt;settlements&gt;
+        &lt;!-- １件の精算 --&gt;
+        &lt;!-- accountに対象勘定識別子、idにこの精算のシステム内識別子 --&gt;
+        &lt;settlement account="account24" id="settlement1"&gt;
+          &lt;name&gt;カードXの精算&lt;/name&gt;
+          &lt;description&gt;精算データの備考です&lt;/description&gt;
+        &lt;/settlement&gt;
+        ...
+        ...
+      &lt;/settlements&gt;
 
-      </kozuchi>
+    &lt;/kozuchi&gt;
 %p CSVのフォーマットはファイル先頭から順に次のようになります。
 %table.csv_format
   %tr

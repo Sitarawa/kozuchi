@@ -1,5 +1,5 @@
 source 'http://rubygems.org'
-ruby '3.3.8'
+ruby '3.3.10'
 
 gem 'activerecord-session_store'
 gem 'bootstrap-sass'

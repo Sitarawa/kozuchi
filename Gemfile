@@ -15,6 +15,7 @@ gem 'rails-observers'
 gem 'rake'
 gem 'rails_autolink'
 gem 'jsbundling-rails'
+gem 'puma'
 
 
 # Bundle gems for the local environment. Make sure to
@@ -28,7 +29,6 @@ group :development, :test do
   gem 'i18n_generators'
   gem 'listen'
   gem 'cuprite'
-  gem 'puma'
   gem "pry-rails"
   gem "rspec-rails"
   gem 'timecop'

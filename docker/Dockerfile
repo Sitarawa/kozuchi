@@ -1,27 +1,34 @@
-# Rails公式イメージはない
-FROM ruby:2.6.6
+# Rails公式イメージはない (ruby:3.4.9 のベースは Debian 12 bookworm)
+FROM ruby:3.4.9
 
-# yarnをインストール
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+# jsbundling-rails / esbuild で JS をビルドするため Node.js 20 (LTS) をインストール
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 
-# 標準でインストールされるnodejs 10.24は互換性がない。nodejs 16をインストール
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
+RUN apt-get update -qq && apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends \
+      build-essential \
+      nodejs \
+      git \
+      libpq-dev && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN apt update -qq && apt upgrade -y
-RUN apt install -y build-essential nodejs yarn git
+# yarn.lock が v1 形式のため classic yarn (1.x) をインストール
+RUN npm install -g yarn
 
 # 小槌の実行ディレクトリ
 RUN mkdir /kozuchi
 WORKDIR /kozuchi
 
-# release-3.1.1
-RUN git clone https://github.com/nay/kozuchi.git -b release-3.1.1
+# release-4.0.1
+RUN git clone https://github.com/nay/kozuchi.git -b release-4.0.1 --depth 1
 
 # cloneしたkozuchiディレクトリに入る
 WORKDIR kozuchi
 
 RUN bundle install
+
+# JSの依存をインストール (esbuild など)
+RUN yarn install
 
 COPY database.yml config/database.yml
 
@@ -32,8 +39,7 @@ RUN chmod +x /usr/bin/entrypoint.sh
 #RUN rails db:create
 #RUN rails db:migrate
 
-RUN rails webpacker:install
-RUN rails webpacker:compile
+# jsbundling-rails が assets:precompile 時に yarn build (esbuild) を実行する
 RUN rails assets:precompile
 
 # コンテナの実行ファイルの指定

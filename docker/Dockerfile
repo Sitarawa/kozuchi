@@ -31,6 +31,7 @@ RUN bundle install
 RUN yarn install
 
 COPY database.yml config/database.yml
+COPY puma.rb config/puma.rb
 
 # コンテナ起動時に実行するファイルを配置して実行権限をつける
 COPY entrypoint.sh /usr/bin/
@@ -42,9 +43,13 @@ RUN chmod +x /usr/bin/entrypoint.sh
 # jsbundling-rails が assets:precompile 時に yarn build (esbuild) を実行する
 RUN rails assets:precompile
 
+RUN mkdir -p tmp/pids
+
 # コンテナの実行ファイルの指定
 ENTRYPOINT ["entrypoint.sh"]
 
 EXPOSE 3000
+EXPOSE 443
 
-CMD ["rails", "server", "-b", "0.0.0.0"]
+#CMD ["rails", "server", "-b", "0.0.0.0"]
+CMD ["bundle", "exec", "pumactl", "start"]

@@ -92,7 +92,7 @@ class Entry::Base < ApplicationRecord
     xml_attributes = {:account => "account#{self.account_id}"}
     xml_attributes[:settlement] = "settlement#{self.settlement_id}" unless self.settlement_id.blank?
     xml_attributes[:result_settlement] = "settlement#{self.result_settlement_id}" unless self.result_settlement_id.blank?
-    xml_attributes[:summary] = XMLUtil.escape(summary) if summary.present?
+    xml_attributes[:summary] = XmlUtil.escape(summary) if summary.present?
     xml.entry(amount, xml_attributes)
   end
 

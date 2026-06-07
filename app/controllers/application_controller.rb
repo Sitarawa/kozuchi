@@ -146,8 +146,8 @@ class ApplicationController < ActionController::Base
     f = now ? flash.now : flash
 
     f[:errors] ||= []
-    obj.errors.each do |attr, msg|
-      f[:errors] << msg
+    obj.errors.each do |error|
+      f[:errors] << error.message
     end
   end
 

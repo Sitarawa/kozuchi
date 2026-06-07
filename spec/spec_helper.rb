@@ -20,7 +20,7 @@ RSpec.configure do |config|
   # config.mock_with :rr
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  config.fixture_paths = ["#{::Rails.root}/spec/fixtures"]
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
@@ -73,7 +73,11 @@ end
 #   alias_method_chain :session_options, :session_key
 # end
 
-require 'capybara/poltergeist'
-Capybara.javascript_driver = :poltergeist
+require 'capybara/cuprite'
+Capybara.register_driver(:cuprite) do |app|
+  Capybara::Cuprite::Driver.new(app, window_size: [1280, 800], process_timeout: 10, js_errors: true)
+end
+Capybara.javascript_driver = :cuprite
+Capybara.default_max_wait_time = 5
 
 require 'capybara-screenshot/rspec'

@@ -1,4 +1,4 @@
-class XMLUtil
+class XmlUtil
   # Builderのエスケープを封じたので必要なものはここで
   def self.escape(text)
     if text

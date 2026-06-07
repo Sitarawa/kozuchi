@@ -1,11 +1,13 @@
 {
+  "name": "kozuchi",
+  "private": true,
   "dependencies": {
-    "@rails/webpacker": "5.2.1",
     "bootstrap": "3",
+    "esbuild": "^0.19.0",
     "jquery": "^3.5.0",
     "jquery-ujs": "^1.2.2"
   },
-  "devDependencies": {
-    "webpack-dev-server": "^3.11.2"
+  "scripts": {
+    "build": "node esbuild.config.js"
   }
 }

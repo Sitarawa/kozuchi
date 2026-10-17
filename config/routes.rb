@@ -4,6 +4,10 @@ Rails.application.routes.draw do
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
+  # 死活監視用。Rails::HealthController は ApplicationController を経由しないため
+  # BASIC 認証やログインなしでアクセスできる
+  get 'up' => 'rails/health#show', as: :rails_health_check
+
   # settings
   namespace :settings do
     controller :accounts do
@@ -80,7 +84,10 @@ Rails.application.routes.draw do
       get "accounts/:account_id/#{t}_deals/new", :action => "new_#{t}_deal", :as => :"new_account_#{t}_deal"
     end
 
-    get 'deals/:year/:month/days', :as => :monthly_deal_days, :action => 'day_navigator'
+    get 'accounts/:account_id/deals/today', as: :today_account_deals, action: :today
+    get 'deals/today', as: :today_deals, action: :today
+    get 'accounts/:account_id/deals/:year/:month/:day', as: :daily_account_deals, action: :daily, constraints: {day: /\d{1,2}/}
+    get 'deals/:year/:month/:day', as: :daily_deals, action: :daily, constraints: {day: /\d{1,2}/}
     get 'accounts/:account_id/deals/:year/:month', as: :monthly_account_deals, action: :monthly
     # TODO: なぜか page.redirect_to redirect_options_proc.call(@deal) でrequirements があるとうまくいかない
     get 'deals/:year/:month', :as => :monthly_deals, :action => 'monthly' #, :requirements => YEAR_MONTH_REQUIREMENTS
@@ -116,7 +123,7 @@ Rails.application.routes.draw do
   # AssetsController
   controller :assets do
     scope :path => 'f' do # /assets はじまりは無視されるため
-      get 'assets/:year/:month', {:as => :monthly_assets, :action => :monthly}.merge(YEAR_MONTH_REQUIREMENTS)
+      get 'assets/:year/:month', :as => :monthly_assets, :action => :monthly, **YEAR_MONTH_REQUIREMENTS
       resources :assets, :only => [:index]
     end
   end
@@ -124,13 +131,13 @@ Rails.application.routes.draw do
   # BalanceSheetController
   controller :balance_sheet do
     get :balance_sheet, :action => :show
-    get 'balance_sheet/:year/:month', {:as => :monthly_balance_sheet, :action => 'monthly'}.merge(YEAR_MONTH_REQUIREMENTS)
+    get 'balance_sheet/:year/:month', :as => :monthly_balance_sheet, :action => 'monthly', **YEAR_MONTH_REQUIREMENTS
   end
 
   # ProfitAndLossController
   controller :profit_and_loss do
     get :profit_and_loss, :action => :show
-    get 'profit_and_loss/:year/:month', {:as => :monthly_profit_and_loss, :action => 'monthly'}.merge(YEAR_MONTH_REQUIREMENTS)
+    get 'profit_and_loss/:year/:month', :as => :monthly_profit_and_loss, :action => 'monthly', **YEAR_MONTH_REQUIREMENTS
   end
 
   # ExportController

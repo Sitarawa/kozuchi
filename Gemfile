@@ -1,7 +1,9 @@
 source 'http://rubygems.org'
-ruby '3.4.9'
+ruby '4.0.7'
 
-gem 'activerecord-session_store'
+# 2.3.0 では、セッションの中のハッシュを直接書き換えた変更が保存されない（表示した年月がセッションに残らない）ため、2.2 系に留める
+# https://github.com/rails/activerecord-session_store/issues/236 が直ったら外す
+gem 'activerecord-session_store', '< 2.3'
 gem 'bootstrap-sass'
 gem 'haml-rails'
 gem 'httpclient'
@@ -9,7 +11,7 @@ gem 'passenger'
 gem 'pg'
 gem 'sassc-rails'
 gem 'concurrent-ruby'
-gem 'rails', '~> 7.2.3'
+gem 'rails', '~> 8.1.0'
 gem 'rails-controller-testing'
 gem 'rails-observers'
 gem 'rake'

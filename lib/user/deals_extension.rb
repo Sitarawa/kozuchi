@@ -2,11 +2,14 @@
 # User本体とコードを分けて整理するためモジュールで記述。
 module User::DealsExtension
   # keywordsをsummaryに含む明細をすべて検索する。 keywordsは配列で受け取り、and検索する。
+  # アルファベットの大文字・小文字は区別しない。
+  # DB依存を避けるため Arel の matches を使う（PostgreSQL では ILIKE、MySQL では LIKE が生成される）。
   def including(keywords)
     raise ArgumentError.new("No keywords") if keywords.blank?
+    summary = Entry::Base.arel_table[:summary]
     select("deals.*"
     ).joins("inner join account_entries on account_entries.deal_id = deals.id"
-    ).where(keywords.map{"account_entries.summary like ?"}.join(' and '), *keywords.map{|k| "%#{k}%"})
+    ).where(keywords.map{|k| summary.matches("%#{k}%")}.inject(:and))
   end
   
   # summary の前方一致で検索する

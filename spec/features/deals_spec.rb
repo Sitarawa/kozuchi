@@ -270,6 +270,17 @@ describe DealsController, type: :feature do
         end
       end
     end
+
+    context "when the keyword differs only in letter case" do
+      before do
+        @deal = create(:general_deal, :date => Date.new(2012, 7, 10), :summary => 'Amazon')
+        fill_in 'keyword', :with => 'aMAZON'
+        click_button('検索')
+      end
+      it do
+        expect(page).to have_content("「aMAZON」を含む明細は1件あります。")
+      end
+    end
   end
 
 end

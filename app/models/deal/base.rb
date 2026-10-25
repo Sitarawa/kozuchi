@@ -20,7 +20,7 @@ class Deal::Base < ApplicationRecord
   
   scope :in_a_time_between, ->(from, to) { where("deals.date >= ? and deals.date <= ?", from, to) }
   scope :created_on, ->(date) { where("created_at >= ? and created_at < ?", date.beginning_of_day, (date + 1).beginning_of_day).order(created_at: :desc) }
-  scope :time_ordering, -> { order(:date, :daily_seq) }
+  scope :time_ordering, ->(direction = :asc) { order(date: direction, daily_seq: direction) }
   scope :recently_updated_ordered, -> { order(updated_at: :desc) }
   scope :on, ->(account_or_account_id) {
     account_id = account_or_account_id.kind_of?(Account::Base) ? account_or_account_id.id : account_or_account_id

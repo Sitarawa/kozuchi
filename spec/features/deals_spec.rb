@@ -281,6 +281,39 @@ describe DealsController, type: :feature do
         expect(page).to have_content("「aMAZON」を含む明細は1件あります。")
       end
     end
+
+    context "when deals with the keyword exist on different dates" do
+      before do
+        create(:general_deal, :date => Date.new(2012, 7, 10), :summary => '10日のランチ')
+        create(:general_deal, :date => Date.new(2012, 7, 20), :summary => '20日のランチ')
+        fill_in 'keyword', :with => 'ランチ'
+        click_button('検索')
+      end
+
+      it "日付の古い順に表示される" do
+        expect(all('td.summary').map(&:text)).to eq ['10日のランチ', '20日のランチ']
+      end
+
+      context "日付の見出しをクリックしたとき" do
+        before do
+          click_link 'toggle_date_order'
+        end
+
+        it "日付の新しい順に表示される" do
+          expect(all('td.summary').map(&:text)).to eq ['20日のランチ', '10日のランチ']
+        end
+
+        context "さらにもう一度クリックしたとき" do
+          before do
+            click_link 'toggle_date_order'
+          end
+
+          it "日付の古い順に戻る" do
+            expect(all('td.summary').map(&:text)).to eq ['10日のランチ', '20日のランチ']
+          end
+        end
+      end
+    end
   end
 
 end

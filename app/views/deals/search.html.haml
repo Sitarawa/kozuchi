@@ -6,7 +6,7 @@
       - unless @deals.empty?
         %table.book
           %tr
-            %th.date 日付
+            %th.date= link_to "日付 #{@order == :desc ? '▼' : '▲'}", search_deals_path(keyword: params[:keyword], order: @order == :desc ? 'asc' : 'desc'), id: 'toggle_date_order', title: '日付の並び順を切り替える'
             %th 摘要
             %th{style: "width: 2em;"}
             %th.account

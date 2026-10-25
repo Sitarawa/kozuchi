@@ -1,5 +1,5 @@
-# Rails公式イメージはない (ruby:3.4.9 のベースは Debian 12 bookworm)
-FROM ruby:3.4.9
+# Rails公式イメージはない (ruby:4.0.7 のベースは Debian 13 trixie)
+FROM ruby:4.0.7
 
 # jsbundling-rails / esbuild で JS をビルドするため Node.js 20 (LTS) をインストール
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
@@ -19,8 +19,8 @@ RUN npm install -g yarn
 RUN mkdir /kozuchi
 WORKDIR /kozuchi
 
-# release-4.0.1
-RUN git clone https://github.com/nay/kozuchi.git -b release-4.0.1 --depth 1
+# release-4.0.5
+RUN git clone https://github.com/nay/kozuchi.git -b release-4.0.5 --depth 1
 
 # cloneしたkozuchiディレクトリに入る
 WORKDIR kozuchi

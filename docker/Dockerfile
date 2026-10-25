@@ -19,8 +19,8 @@ RUN npm install -g yarn
 RUN mkdir /kozuchi
 WORKDIR /kozuchi
 
-# release-4.0.5
-RUN git clone https://github.com/nay/kozuchi.git -b release-4.0.5 --depth 1
+# release-4.0.5 に Sitarawa の修正を加えたもの
+RUN git clone https://github.com/Sitarawa/kozuchi.git -b release-4.0.5-sitarawa.1 --depth 1
 
 # cloneしたkozuchiディレクトリに入る
 WORKDIR kozuchi

@@ -24,6 +24,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      # 通常は GitHub から clone する。手元のソースで動かすときは
+      #   docker compose build --build-arg KOZUCHI_SOURCE=local rails_kozuchi
+      additional_contexts:
+        kozuchi_src: ..
 
     restart: always
     
@@ -54,7 +58,38 @@ services:
 
     networks:
       - net_kozuchi
-      
+
+  # 動作確認用: 手元のソース（コミット・push 前のものを含む）でビルドして起動する
+  # DB は本番と共通（db_kozuchi）。起動時に db:migrate が実行されるので注意
+  #   docker compose --profile local up -d --build rails_kozuchi_local
+  #   → http://127.0.0.1:3011/ （SSL なし）
+  #   docker compose --profile local down rails_kozuchi_local  で停止
+  rails_kozuchi_local:
+    profiles: ["local"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        KOZUCHI_SOURCE: local
+      additional_contexts:
+        kozuchi_src: ..
+
+    environment:
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      KOZUCHI_DATABASE_PASSWORD: ${KOZUCHI_DATABASE_PASSWORD}
+      RAILS_ENV: production
+      RAILS_SERVE_STATIC_FILES: "true"
+
+    ports:
+      - 127.0.0.1:3011:3000
+
+    depends_on:
+      db_kozuchi:
+        condition: service_healthy
+
+    networks:
+      - net_kozuchi
+
 volumes:
   volume_kozuchi_db:
     name: volume_kozuchi_db

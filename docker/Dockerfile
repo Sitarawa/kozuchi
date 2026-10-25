@@ -1,5 +1,10 @@
+# 小槌のソースの取得方法 (build arg で切り替える)
+#   git   : GitHub から clone する（本番用、既定）
+#   local : 手元のソースをコピーする（動作確認用。docker-compose.yml の rails_kozuchi_local を参照）
+ARG KOZUCHI_SOURCE=git
+
 # Rails公式イメージはない (ruby:4.0.7 のベースは Debian 13 trixie)
-FROM ruby:4.0.7
+FROM ruby:4.0.7 AS base
 
 # jsbundling-rails / esbuild で JS をビルドするため Node.js 20 (LTS) をインストール
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
@@ -19,11 +24,22 @@ RUN npm install -g yarn
 RUN mkdir /kozuchi
 WORKDIR /kozuchi
 
+# --- ソース取得: git ---
+FROM base AS source-git
 # release-4.0.5 に Sitarawa の修正を加えたもの
 RUN git clone https://github.com/Sitarawa/kozuchi.git -b release-4.0.5-sitarawa.1 --depth 1
 
-# cloneしたkozuchiディレクトリに入る
-WORKDIR kozuchi
+# --- ソース取得: local ---
+# kozuchi_src はビルド時に追加コンテキストとしてリポジトリのルートを渡す
+# 除外するファイルはリポジトリのルートの .dockerignore で指定する
+FROM base AS source-local
+COPY --from=kozuchi_src . kozuchi
+
+# --- 共通 ---
+FROM source-${KOZUCHI_SOURCE}
+
+# kozuchiディレクトリに入る
+WORKDIR /kozuchi/kozuchi
 
 RUN bundle install
 

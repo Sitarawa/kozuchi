@@ -1,0 +1,17 @@
+# docker/Dockerfile の source-local ステージでリポジトリのルートをコピーするときの除外設定
+
+# docker/ は機密情報 (.env) を含み、イメージにはビルドコンテキスト (docker/) 側から必要なファイルだけを COPY する
+/docker
+
+.git
+.github
+.claude
+/node_modules
+/tmp
+/log
+/coverage
+/public/assets
+/app/assets/builds/*
+!/app/assets/builds/.gitkeep
+**/.env
+**/.env.*

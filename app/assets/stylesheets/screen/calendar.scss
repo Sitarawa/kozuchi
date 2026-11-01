@@ -5,6 +5,7 @@
   $even_color: #f0ffb2; // #E8D8E8;
   $odd_color: #fff0b2; // #FFDDBC;
   $selected_color: $sub_color; // #ffb7db;
+  $hover_color: lighten($selected_color, 15%);
 
   * {
     color: black;
@@ -67,8 +68,14 @@
     td.selectable_month {
       a {
         display:block;
+        padding: 0px 2px;
+        cursor:pointer;
         text-decoration:none;
         text-align:right;
+      }
+
+      div {
+        padding: 0px;
       }
 
       div.odd_year {
@@ -79,6 +86,11 @@
       div.even_year {
         border: 2px outset $even_color;
         background-color: $even_color;
+      }
+
+      div:hover {
+        border-color: $hover_color;
+        background-color: $hover_color;
       }
     }
   }

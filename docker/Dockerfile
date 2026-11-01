@@ -26,8 +26,9 @@ WORKDIR /kozuchi
 
 # --- ソース取得: git ---
 FROM base AS source-git
-# release-4.0.5 に Sitarawa の修正を加えたもの
-RUN git clone https://github.com/Sitarawa/kozuchi.git -b release-4.0.5-sitarawa.1 --depth 1
+# Sitarawa/kozuchi の master の最新を取得する
+# ADD の git URL はビルドのたびにリモートの最新コミットを確認し、変わっていれば取り直す（--no-cache 不要）
+ADD https://github.com/Sitarawa/kozuchi.git#master kozuchi
 
 # --- ソース取得: local ---
 # kozuchi_src はビルド時に追加コンテキストとしてリポジトリのルートを渡す

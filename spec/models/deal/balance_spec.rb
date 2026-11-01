@@ -229,6 +229,27 @@ describe Deal::Balance do
       expect(balance_deal.entry.date.to_s).to eq Date.new(2012, 4, 2).to_s
     end
 
+    context "口座を変えたとき" do
+      before do
+        balance_deal.account_id = Fixtures.identify(:taro_bank)
+      end
+      it "保存でき、entryが新しい口座で作り直される" do
+        old_entry_id = balance_deal.entry.id
+        expect(balance_deal.save).to be_truthy
+        balance_deal.reload
+        expect(balance_deal.entry.id).not_to eq old_entry_id
+        expect(balance_deal.entry.account_id).to eq Fixtures.identify(:taro_bank)
+        expect(balance_deal.balance).to eq 1000
+        expect(Entry::Base.where(id: old_entry_id)).not_to exist
+      end
+      it "新しい口座の初期残高になる" do
+        balance_deal.save!
+        balance_deal.reload
+        expect(balance_deal.entry).to be_initial_balance
+        expect(balance_deal.amount).to eq 1000
+      end
+    end
+
     context "initialだったBalanceをinitialじゃない位置に移動したとき" do
       let!(:balance_deal_2) { create(:balance_deal, :balance => 1333, :date => Date.new(2012, 4, 3)) }
       before do

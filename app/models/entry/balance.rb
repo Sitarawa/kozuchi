@@ -11,6 +11,10 @@ class Entry::Balance < Entry::Base
   # amountが変わるような更新はされない（作り直しになる）想定
   before_create :set_amount
 
+  # 口座を変えた残高記入は Deal::Balance が保存時に作り直すので、検証では止めず、そのまま更新されそうになったときだけ止める
+  skip_callback :validation, :before, :error_if_account_is_is_chanegd
+  before_update :error_if_account_is_is_chanegd
+
   # システム内の全残高の含み損益を再計算して更新する
   def self.adjust_all!
     entries_per_user = where(initial_balance: false).order("date, daily_seq").includes(:deal).group_by(&:user_id)

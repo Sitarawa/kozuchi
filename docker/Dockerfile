@@ -28,13 +28,19 @@ WORKDIR /kozuchi
 FROM base AS source-git
 # Sitarawa/kozuchi の master の最新を取得する
 # ADD の git URL はビルドのたびにリモートの最新コミットを確認し、変わっていれば取り直す（--no-cache 不要）
-ADD https://github.com/Sitarawa/kozuchi.git#master kozuchi
+# 画面にリビジョンを出すため .git を残して取得し、ハッシュを REVISION に書き出してから .git は消す
+ADD --keep-git-dir=true https://github.com/Sitarawa/kozuchi.git#master kozuchi
+RUN git -C kozuchi rev-parse --short HEAD > kozuchi/REVISION && rm -rf kozuchi/.git
 
 # --- ソース取得: local ---
 # kozuchi_src はビルド時に追加コンテキストとしてリポジトリのルートを渡す
 # 除外するファイルはリポジトリのルートの .dockerignore で指定する
 FROM base AS source-local
 COPY --from=kozuchi_src . kozuchi
+# .git はコピーしないので、リビジョンはビルド時に渡す（未指定なら local）
+#   KOZUCHI_REVISION=$(git rev-parse --short HEAD) docker compose --profile local up -d --build rails_kozuchi_local
+ARG KOZUCHI_REVISION=local
+RUN echo "$KOZUCHI_REVISION" > kozuchi/REVISION
 
 # --- 共通 ---
 FROM source-${KOZUCHI_SOURCE}

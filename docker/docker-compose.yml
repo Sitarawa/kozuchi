@@ -71,6 +71,7 @@ services:
       dockerfile: Dockerfile
       args:
         KOZUCHI_SOURCE: local
+        KOZUCHI_REVISION: ${KOZUCHI_REVISION:-local}
       additional_contexts:
         kozuchi_src: ..
 

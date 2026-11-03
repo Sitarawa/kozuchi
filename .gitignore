@@ -21,3 +21,6 @@ nbproject
 /yarn-error.log
 yarn-debug.log*
 .yarn-integrity
+
+# Docker ビルド時に書き出すリビジョン（config/initializers/kozuchi_version.rb 参照）
+/REVISION

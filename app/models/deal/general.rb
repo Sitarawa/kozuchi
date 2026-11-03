@@ -95,7 +95,7 @@ class Deal::General < Deal::Base
 
   def partner_account_name_of(e)
     raise "invalid entry" if e.deal_id != self.id
-    e.amount.to_i >= 0 ? creditor_account_name : debtor_account_name
+    e.shown_on_creditor_side? ? debtor_account_name : creditor_account_name
   end
 
   def settlement_attached?
@@ -195,7 +195,7 @@ class Deal::General < Deal::Base
   def entries_hash_for(remote_user_id)
     related_entries(remote_user_id).map do |e|
       ex_account_id = e.account.link.try(:target_ex_account_id) || e.account.link_requests.detect{|lr| lr.sender_id == remote_user_id}.sender_ex_account_id
-      {:id => e.id, :ex_account_id => ex_account_id, :amount => e.amount, :summary => e.summary}
+      {:id => e.id, :ex_account_id => ex_account_id, :amount => e.amount, :creditor => e.creditor?, :summary => e.summary}
     end
   end
 

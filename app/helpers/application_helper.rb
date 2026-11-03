@@ -177,8 +177,8 @@ EOF
       <td class="summary" #{style}>#{entry.summary}</td>
       <td class="account_deals_link">#{link_to '→', deals_list_path(date: entry.date, account_id: entry.account_id, anchor: "e#{entry.id}")}</td>
       <td class="account" #{style}>#{entry.mate_account_name}</td>
-      <td class="amount" #{style}>#{number_with_delimiter(entry.amount.abs) if entry.amount < 0}</td>
-      <td class="amount" #{style}>#{number_with_delimiter(entry.amount) if entry.amount >= 0}</td>
+      <td class="amount" #{style}>#{number_with_delimiter(entry.amount.abs) if entry.shown_on_creditor_side?}</td>
+      <td class="amount" #{style}>#{number_with_delimiter(entry.amount) if !entry.shown_on_creditor_side?}</td>
 EOS
     s.html_safe
   end

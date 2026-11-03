@@ -68,7 +68,8 @@ module User::AccountLinking
       # 対応する entry を取り出す
       linked_entries = linked_deal.linked_entries(sender_id, sender_ex_deal_id).sort{|a, b| a[:id] <=> b[:id] }
       # 金額や口座構成の変更があったかを検出する。
-      ex_entries_hash_without_summary = ex_entries_hash.map{|h| h.except(:summary)}
+      # 貸借の区別は 0円の記入の向きを決めるためだけに送られてくるので比べない
+      ex_entries_hash_without_summary = ex_entries_hash.map{|h| h.except(:summary, :creditor)}
       supposed_hash = linked_entries.map{|e| {:id => e.linked_ex_entry_id, :ex_account_id => e.account_id, :amount => e.amount * -1 }}.sort{|a, b| a[:id] <=> b[:id] }
       if supposed_hash == ex_entries_hash_without_summary
         # 変更がなければ相手方を確定する
@@ -125,7 +126,8 @@ module User::AccountLinking
       used_accounts << account
       amount = e[:amount] * -1
       attrs = {:account_id => account.id, :amount => amount, :summary => summary_mode == 'unify' ? nil : e[:summary], :linked_ex_entry_id => e[:id], :linked_ex_deal_id => sender_ex_deal_id, :linked_user_id => sender_id, :linked_ex_entry_confirmed => true}
-      if amount < 0
+      # 相手の借方は自分の貸方になる。0円は符号で決められないので相手の貸借の区別を使う
+      if amount < 0 || (amount == 0 && !e[:creditor])
         creditor_entries_attributes << attrs.merge(:line_number => creditor_line_number += 1)
         creditor_amount += amount
       else
@@ -137,12 +139,12 @@ module User::AccountLinking
     partner_account = default_asset_other_than(*used_accounts)
     raise "could not find safe partner account. " unless partner_account
 
-    if diff < 0
+    # 差額が 0 でも、片側に記入がない（0円の取引）なら 0円の相手記入を作る
+    if diff < 0 || (diff == 0 && creditor_entries_attributes.empty?)
       creditor_entries_attributes << {:account_id => partner_account.id, :amount => diff, :line_number => creditor_line_number += 1, summary: partner_entry_summary}
-    elsif diff > 0
+    elsif diff > 0 || (diff == 0 && debtor_entries_attributes.empty?)
       debtor_entries_attributes << {:account_id => partner_account.id, :amount => diff, :line_number => debtor_line_number += 1, summary: partner_entry_summary}
     end
-    # 0 ならなにもしない
 
     linked_deal.attributes = {:debtor_entries_attributes => debtor_entries_attributes, :creditor_entries_attributes => creditor_entries_attributes}
 

@@ -95,9 +95,9 @@ describe Deal::General do
       deal = new_complex_deal(3, 1, {:taro_food => 1300},{:taro_cache => -1000, :taro_bank => -200})
       expect(deal.valid?).to be_falsey
     end
-    it "amountが0のEntryを含む複合Dealが検証を通らないこと" do
+    it "amountが0のEntryを含む複合Dealが検証を通ること" do
       deal = new_complex_deal(3, 1, {:taro_food => 1300},{:taro_cache => -1300, :taro_bank => 0})
-      expect(deal.valid?).to be_falsey
+      expect(deal.valid?).to be_truthy
     end
     it "複合Dealの各Entryの口座に重複があっても構わない" do
       deal = new_complex_deal(3, 1, {:taro_food => 1400}, {:taro_cache => -1300, :taro_food => -100})
@@ -108,14 +108,35 @@ describe Deal::General do
       deal = new_simple_deal(3, 1, :taro_food, :taro_food, 300)
       expect(deal.valid?).to be_truthy
     end
-    it "金額が0ではいけないこと" do
+    it "金額が0でもよいこと（ポイント払いなどで支払いが0円の記入を残すため）" do
       deal = new_simple_deal(3, 1, :taro_food, :taro_cache, 0)
-      deal.valid?
-      expect(deal.valid?).to be_falsey
+      expect(deal.valid?).to be_truthy
     end
   end
 
   describe "create" do
+
+    context "金額が0のとき" do
+      let(:deal) { new_simple_deal(3, 1, :taro_cache, :taro_food, 0) }
+      before do
+        deal.save!
+        deal.reload
+      end
+      it "貸借とも0円の記入として作成される" do
+        expect(deal.debtor_entries.map(&:amount)).to eq [0]
+        expect(deal.creditor_entries.map(&:amount)).to eq [0]
+      end
+      it "一覧では借方・貸方それぞれの側に表示される" do
+        expect(deal.debtor_entries.first).to be_shown_on_debtor_side
+        expect(deal.debtor_entries.first).not_to be_shown_on_creditor_side
+        expect(deal.creditor_entries.first).to be_shown_on_creditor_side
+        expect(deal.creditor_entries.first).not_to be_shown_on_debtor_side
+      end
+      it "相手勘定名が貸借の区別どおりになる" do
+        expect(deal.debtor_entries.first.partner_account_name).to eq accounts(:taro_cache).name
+        expect(deal.creditor_entries.first.partner_account_name).to eq accounts(:taro_food).name
+      end
+    end
 
     it "数字の合った複合Dealが作成できること" do
       deal = new_complex_deal(3, 1, {:taro_food => 1300},{:taro_cache => -1000, :taro_bank => -300})

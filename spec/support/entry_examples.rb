@@ -2,9 +2,9 @@
 
 shared_examples "valid? when including ::Entry" do
   describe "amount" do
-    it "0の場合は検証エラーとなる" do
+    it "0の場合は検証エラーとならない" do
       entry.amount = '0'
-      expect(entry).not_to be_valid
+      expect(entry).to be_valid
     end
 
     it "'3a'の場合は検証エラーとなる" do

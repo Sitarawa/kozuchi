@@ -71,6 +71,16 @@ class Entry::Base < ApplicationRecord
     !!balance
   end
 
+  # 一覧で金額を借方・貸方のどちらの欄に出すか
+  # 0円は取引の記入なら貸借の側に出し、残高記入（不明金なし）ならどちらにも出さない
+  def shown_on_debtor_side?
+    amount > 0 || (amount == 0 && kind_of?(Entry::General) && !creditor?)
+  end
+
+  def shown_on_creditor_side?
+    amount < 0 || (amount == 0 && kind_of?(Entry::General) && creditor?)
+  end
+
   # StringならString のまま 前後のスペースを削除して , をとる
   def self.parse_amount(value)
     value.kind_of?(String) ? value.strip.gsub(/,/, '') : value

@@ -45,6 +45,21 @@ describe "Deal Linking" do
 
   describe "create" do
 
+    it "金額が0の片面連携取引が作成でき、相手側では貸借が逆の0円の記入になること" do
+      @taro_deal = @taro.general_deals.build(:summary => 'test', :summary_mode => 'unify', :date => Time.zone.today,
+        :creditor_entries_attributes => [{:account_id => @taro_cache.id, :amount => 0}],
+        :debtor_entries_attributes => [{:account_id => @taro_hanako.id, :amount => 0}]
+      )
+      expect{ @taro_deal.save! }.not_to raise_error
+      taro_linked_entry = @taro_deal.debtor_entries.first
+      hanako_deal = @hanako.general_deals.find_by(id: taro_linked_entry.linked_ex_deal_id)
+      expect(hanako_deal).not_to be_nil
+      hanako_linked_entry = hanako_deal.creditor_entries.first
+      expect(hanako_linked_entry.account_id).to eq @hanako_taro.id
+      expect(hanako_linked_entry.amount).to eq 0
+      expect(hanako_deal.debtor_entries.map(&:amount)).to eq [0]
+    end
+
     it "シンプルな片面連携取引が作成できること" do
       prepare_simple_taro_deal_with_one_link
       # セーブが成功する

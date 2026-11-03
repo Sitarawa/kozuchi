@@ -21,8 +21,8 @@
                   %td.summary{rowspan: d.entries.size}= d.summary
                   %td.icon_to_deal{rowspan: d.entries.size, syle: "text-align:center;"}= icon_to_deal d
                 %td.account= e.account.name
-                %td.amount= number_with_delimiter(e.amount) if e.amount  > 0 && !e.initial_balance?
-                %td.amount= number_with_delimiter(e.amount.abs) if e.amount < 0 && !e.initial_balance?
+                %td.amount= number_with_delimiter(e.amount) if e.shown_on_debtor_side? && !e.initial_balance?
+                %td.amount= number_with_delimiter(e.amount.abs) if e.shown_on_creditor_side? && !e.initial_balance?
                 %td.amount= number_with_delimiter(e.balance)
     .col-md-2.side_nav
       = link_to '総合', monthly_deals_path(year: current_year, month: current_month), class: %w(btn btn-default)
